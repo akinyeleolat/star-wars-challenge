@@ -9,7 +9,6 @@ return {name, gender, height}
 }
 
 const getMovieCharacterDetails = async (movies)=>{
-    // console.log(movies)
     if(movies.characters.length > 0){
         const moviesCharacter = movies.characters;
         const charactersDetails = await Promise.all(
@@ -17,7 +16,6 @@ const getMovieCharacterDetails = async (movies)=>{
             const characters = await getCharacterDetail(characterUrl)
             return characters
         }))
-        // console.log(charactersDetails);
         return charactersDetails;
     }
 }

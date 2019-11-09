@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, BrowserRouter, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
-import { getAllMovies, getSingleMovies } from './actions/moviesAction';
+import { getAllMovies } from './actions/moviesAction';
 import Home from './components/Home';
 
 
@@ -16,7 +16,6 @@ import './index.css';
 
 store.dispatch(getAllMovies());
 
-store.dispatch(getSingleMovies(1));
 
 toast.configure({
   autoClose: 2000,

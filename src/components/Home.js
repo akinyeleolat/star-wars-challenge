@@ -5,8 +5,9 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import useStyles from '../styles';
 import Container from '@material-ui/core/Container';
-import Footer from '../components/layout/footer';
-import Header from '../components/layout/header';
+import Footer from './layout/Footer';
+import Header from './layout/Header';
+import DisplayComponent from './queryComponent/Display';
 
 
 
@@ -50,7 +51,7 @@ const Home = () => {
         <Container className={classes.cardGrid} maxWidth="md">
           {/* End hero unit */}
           <Grid container spacing={4}>
-            welcome
+           <DisplayComponent/>
           </Grid> 
         </Container>
       </main>

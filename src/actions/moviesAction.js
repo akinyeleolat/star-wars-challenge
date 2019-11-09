@@ -1,3 +1,4 @@
+import axios from 'axios'; 
 import instance from '../config/axios';
 import { FETCH_ALL_MOVIES, FETCH_MOVIES_DETAILS } from './types';
 import getMovieCharacterDetails from '../utils/getMovieCharacter';
@@ -24,7 +25,8 @@ export const getAllMovies = () => {
         const newList = {
          movieId:  (index+1),
           title: movie.title,
-          releaseDate: movie.release_date
+          releaseDate: movie.release_date,
+          movieUrl: movie.url
         }
         return newList
       })
@@ -33,9 +35,9 @@ export const getAllMovies = () => {
     };
   };
 
-  export const getSingleMovies = (movieId) =>{
+  export const getSingleMovies = (movieUrl) =>{
     return async dispatch => {
-      const res = await instance.get(`/films/${movieId}`);
+      const res = await axios.get(movieUrl);
       const movies = res.data;
       const {title, opening_crawl} = movies;
       const characters = await getMovieCharacterDetails(movies);
