@@ -4,6 +4,10 @@ const useStyles = makeStyles(theme => ({
   icon: {
     marginRight: theme.spacing(2),
   },
+  header:{
+    backgroundColor: '#000',
+    color: '#F0E68C'
+   },
   heroContent: {
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(8, 0, 6),
@@ -22,23 +26,17 @@ const useStyles = makeStyles(theme => ({
     height: 0,
     paddingTop: '56.25%', // 16:9
   },
-  expand: {
-    transform: 'rotate(0deg)',
-    marginLeft: 'auto',
-    transition: theme.transitions.create('transform', {
-      duration: theme.transitions.duration.shortest,
-    }),
-  },
-  expandOpen: {
-    transform: 'rotate(180deg)',
-  },
-  avatar: {
-    backgroundColor: 'red',
-  },
   footer: {
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: '#000',
+    color: '#F0E68C',
     padding: theme.spacing(6),
   },
+  copyright: {
+    color: '#fff',
+  },
+  main:{
+    color: '#000'
+  }
 }));
 
 

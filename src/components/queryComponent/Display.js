@@ -1,11 +1,14 @@
 import React, { Component, Fragment } from 'react';
-import { Select, FormControl, InputLabel, Typography } from '@material-ui/core';
+import { Select, FormControl, Typography, Grid, Button} from '@material-ui/core';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import Paper from '@material-ui/core/Paper';
 import { getAllMovies, getSingleMovies } from '../../actions/moviesAction';
-import Paper from '../layout/Paper';
+import PaperSheet from '../layout/PaperSheet';
 import DisplayTable from '../queryComponent/DisplayTable';
-import './display.css';
+import DisplayGif from '../../styles/assets/display.gif';
+import Loader from '../../styles/assets/giphy.gif';
+
 
 class Display extends Component {
     constructor(props){
@@ -35,20 +38,25 @@ class Display extends Component {
     };
 
     renderMovieOption = (moviesList) =>{
-      // style button and display horizontally
       // add loading between each state change
       let movieOption;
+      const style ={
+        padding: '10px',
+        paddingLeft: '30%',
+        marginBottom:'20px'
+      }
       if(moviesList){
         movieOption = moviesList.map((movie, index) =>
         <option key={index} value={movie.movieUrl}>{movie.title}</option>
         )
-      }
+    }
       return(
-        <Fragment>
+        <Paper style={style}>
           <form  onSubmit={this.handleSubmit}>
           <FormControl>
-          <InputLabel  htmlFor="movies">Movies</InputLabel>
-          <Select
+              <Grid container spacing={2} justify="center">
+                <Grid item>
+                <Select
                   native
                   value={this.state.movieId}
                   onChange={this.handleChange}
@@ -57,13 +65,17 @@ class Display extends Component {
                   id: 'movies',
                  }}
                 >
-          <option value="" />
-          {movieOption}
-          </Select>
-          <button type="submit">View Details</button>
+                <option value="">Select movie title</option>
+                 {movieOption}
+                </Select>
+                </Grid>
+                <Grid item>
+                <Button type="submit" color="primary" variant="contained">View Details</Button>
+                </Grid>
+              </Grid>
           </FormControl>
           </form>
-        </Fragment>
+        </Paper>
       )
     }
     renderMovieTitle = (data) =>{
@@ -92,25 +104,27 @@ class Display extends Component {
       const moviesList = this.props.movieList;
       const movieDetail = this.props.movieDetail;
         return (
-            <div className='display'>
-              <Paper>
+            <div>
+              {moviesList.length<1? <img src={Loader} alt='loading ...'/>:
+              <PaperSheet>
               {this.renderMovieOption(moviesList)}
-              <Paper>
-                {!movieDetail? '...loading':  (
+              <Fragment>
+                {!movieDetail? <img src={DisplayGif} width='100%' alt='loading'/>:  (
                   <Fragment>
                   {this.renderMovieTitle(movieDetail)}
                   {this.renderOpeningCrawl(movieDetail)}
                   <DisplayTable tableData={this.state.tableData}/>
                   </Fragment>
                   )}
-              </Paper>
-              </Paper> 
+              </Fragment>
+              </PaperSheet> }
             </div>
         )
     }
 }
 Display.propTypes = {
   movieList: PropTypes.array.isRequired,
+  classes: PropTypes.object.isRequired,
 };
 
 
@@ -121,7 +135,10 @@ const mapStateToProps = ({movies}) => (
   movieDetail: movies.movie
 });
 
-export default connect(
-  mapStateToProps,
-  { getAllMovies, getSingleMovies }
-)(Display);
+const mapDispatchToProps = {
+  getAllMovies,
+  getSingleMovies
+};
+
+
+export default connect(mapStateToProps,mapDispatchToProps)(Display);

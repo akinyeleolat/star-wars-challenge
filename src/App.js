@@ -1,20 +1,12 @@
 import React from 'react';
-import { Route, BrowserRouter, Switch } from 'react-router-dom';
-import { Provider } from 'react-redux';
-
-import { getAllMovies } from './actions/moviesAction';
-import Home from './components/Home';
-
-
-import store from './store';
-
 import 'react-toastify/dist/ReactToastify.css';
 import { toast, ToastContainer } from 'react-toastify';
-
+import { Route, BrowserRouter, Switch } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import Home from './components/Home';
+import store from './store';
 import './index.css';
 
-
-store.dispatch(getAllMovies());
 
 
 toast.configure({
