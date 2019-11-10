@@ -6,7 +6,10 @@ const useStyles = makeStyles(theme => ({
   },
   header:{
     backgroundColor: '#000',
-    color: '#F0E68C'
+    color: '#F0E68C',
+   },
+   logo:{
+     width: '100px'
    },
   heroContent: {
     backgroundColor: theme.palette.background.paper,

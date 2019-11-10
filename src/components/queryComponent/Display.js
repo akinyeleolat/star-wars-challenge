@@ -11,6 +11,7 @@ import DisplayGif from '../../styles/assets/display.gif';
 import Loader from '../../styles/assets/giphy.gif';
 import StarLoader from '../../styles/assets/star-wars.gif';
 import Animate from '../layout/Animate';
+import AnimateTitle from '../layout/AnimateTitle';
 
 
 class Display extends Component {
@@ -96,7 +97,9 @@ class Display extends Component {
     renderMovieTitle = (data) =>{
       const {title} = data;
       return(
+        <AnimateTitle>
         <h1>{title}</h1>
+        </AnimateTitle>
       )
     }
 
@@ -104,7 +107,7 @@ class Display extends Component {
       const {opening_crawl} = data;  
       return(
         <Fragment>
-          <Animate>
+        <Animate>
         <Typography>{opening_crawl}</Typography>
         </Animate>
          </Fragment> 

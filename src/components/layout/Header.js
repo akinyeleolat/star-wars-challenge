@@ -11,7 +11,7 @@ const Header = () => {
     <Fragment>
       <AppBar position="relative">
         <Toolbar className={classes.header}>
-          <img src={logo} alt='logo'/>
+          <img src={logo} className={classes.logo} alt='logo'/>
         </Toolbar>
       </AppBar>
     </Fragment>
