@@ -1,6 +1,7 @@
 import {
     FETCH_ALL_MOVIES,
-    FETCH_MOVIES_DETAILS
+    FETCH_MOVIES_DETAILS,
+    FETCH_MOVIES_INFO
   } from '../actions/types';
   
   const initialState = {
@@ -15,6 +16,11 @@ import {
           ...state,
           movieList: action.payload
         };
+      case FETCH_MOVIES_INFO:
+        return{
+          ...state,
+          movieInfo: action.payload
+        }
       case FETCH_MOVIES_DETAILS:
         return{
           ...state,

@@ -101,9 +101,7 @@ class Display extends Component {
     }
 
     renderOpeningCrawl = data =>{
-      const {opening_crawl} = data;
-      // add animation
-  
+      const {opening_crawl} = data;  
       return(
         <Fragment>
           <Animate>
@@ -123,6 +121,7 @@ class Display extends Component {
     render() {
       const moviesList = this.props.movieList;
       const movieDetail = this.props.movieDetail;
+      const movieInfo = this.props.movieInfo;
       const imageStyle = {
         width: '100%',
         opacity:'0.7',
@@ -140,8 +139,8 @@ class Display extends Component {
               <Fragment>
                 {!movieDetail? <img src={DisplayGif} width='100%' alt='loading'/>:  (
                   <Fragment>
-                  {this.renderMovieTitle(movieDetail)}
-                  {this.renderOpeningCrawl(movieDetail)}
+                  {this.renderMovieTitle(movieInfo)}
+                  {this.renderOpeningCrawl(movieInfo)}
                   {this.state.isLoading?<img src={Loader} style={innerLoaderStyle} alt='loading ...'/> : <DisplayTable tableData={this.state.tableData}/>}
                   </Fragment>
                   )}
@@ -161,6 +160,7 @@ Display.propTypes = {
 const mapStateToProps = ({movies}) => (
     {
   movieList: movies.movieList,
+  movieInfo: movies.movieInfo,
   movieDetail: movies.movie
 });
 

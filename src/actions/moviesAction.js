@@ -1,6 +1,10 @@
 import axios from 'axios'; 
 import instance from '../config/axios';
-import { FETCH_ALL_MOVIES, FETCH_MOVIES_DETAILS } from './types';
+import {
+  FETCH_ALL_MOVIES,
+  FETCH_MOVIES_DETAILS,
+  FETCH_MOVIES_INFO
+} from './types';
 import getMovieCharacterDetails from '../utils/getMovieCharacter';
 
 export const fetchMoviesList = moviesList => {
@@ -14,6 +18,13 @@ export const fetchMovies = movie =>{
   return{
     type: FETCH_MOVIES_DETAILS,
     payload: movie
+  };
+};
+
+export const fetchMovieInfo = movieInfo =>{
+  return{
+    type: FETCH_MOVIES_INFO,
+    payload: movieInfo
   }
 }
 
@@ -40,10 +51,13 @@ export const getAllMovies = () => {
       const res = await axios.get(movieUrl);
       const movies = res.data;
       const {title, opening_crawl} = movies;
+      const movieInfo ={
+        title,
+        opening_crawl
+      }
+      dispatch(fetchMovieInfo(movieInfo))
       const characters = await getMovieCharacterDetails(movies);
       const movieData = {
-        title,
-        opening_crawl,
         characters
       }
       dispatch(fetchMovies(movieData));
