@@ -36,6 +36,8 @@ class Display extends Component {
         this.setMovieCharacter(movieDetail);
       }
     };
+    // filter the current table data and return back to state
+    // optionaly called display table 
 
     renderMovieOption = (moviesList) =>{
       // add loading between each state change
@@ -105,7 +107,7 @@ class Display extends Component {
       const movieDetail = this.props.movieDetail;
         return (
             <div>
-              {moviesList.length<1? <img src={Loader} alt='loading ...'/>:
+              {moviesList.length<1? <img src={Loader} width='70%' alt='loading ...'/>:
               <PaperSheet>
               {this.renderMovieOption(moviesList)}
               <Fragment>

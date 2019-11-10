@@ -31,9 +31,8 @@ const { tableData } = data;
 }
 
 const computeHeight = (data)=>{
-  const {tableData} = data;
-  if(tableData){
-    const totalHeight = tableData
+  if(data){
+    const totalHeight = data
     .map(height => parseInt(height.height))
     .filter(x =>!isNaN(x))
     .reduce((sum,height) => sum + height, 0);
@@ -231,7 +230,6 @@ const EnhancedTable  = (tableData) =>{
 
   if(tableData){
       getRowData(tableData);
-      totalHeight = computeHeight(tableData);
   }
 
   const handleRequestSort = (event, property) => {
@@ -285,6 +283,8 @@ const EnhancedTable  = (tableData) =>{
   const isSelected = name => selected.indexOf(name) !== -1;
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+
+  totalHeight = computeHeight([...rows]);
 
   return (
     <div className={classes.root}>
@@ -344,16 +344,13 @@ const EnhancedTable  = (tableData) =>{
               )}
               {
                 <TableRow>
-                  <TableCell align='left' colSpan={3}>
+                  <TableCell align='left' colSpan={6}>
                   <Typography className={classes.title} variant="h6" id="tableTitle">
                     Total Characters: {rows.length}
-                  </Typography>  
-                  </TableCell>
-
-                  <TableCell align='right' colSpan={3}>
+                  </Typography>
                   <Typography className={classes.title} variant="h6" id="tableTitle">
                     Total Height of Characters: {totalHeight}
-                  </Typography>  
+                  </Typography>    
                   </TableCell>
                 </TableRow>
               }
