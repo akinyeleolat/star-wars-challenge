@@ -21,6 +21,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
 
 
+
 let rows = [];
 
 
@@ -196,7 +197,9 @@ const useStyles = makeStyles(theme => ({
   },
   paper: {
     width: '100%',
+    background:'#e5e5c9',
     marginBottom: theme.spacing(2),
+    opacity: 0.7
   },
   table: {
     minWidth: 750,

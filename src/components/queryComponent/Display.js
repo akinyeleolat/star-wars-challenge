@@ -3,11 +3,14 @@ import { Select, FormControl, Typography, Grid, Button} from '@material-ui/core'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Paper from '@material-ui/core/Paper';
+import Icon from '@material-ui/icons/LocalActivity';
 import { getAllMovies, getSingleMovies } from '../../actions/moviesAction';
 import PaperSheet from '../layout/PaperSheet';
 import DisplayTable from '../queryComponent/DisplayTable';
 import DisplayGif from '../../styles/assets/display.gif';
 import Loader from '../../styles/assets/giphy.gif';
+import StarLoader from '../../styles/assets/star-wars.gif';
+import Animate from '../layout/Animate';
 
 
 class Display extends Component {
@@ -16,6 +19,7 @@ class Display extends Component {
         this.state = {
             tableData: [],
             movieId: '',
+            isLoading: false
         }
     }
     componentDidMount(){
@@ -24,29 +28,37 @@ class Display extends Component {
     handleChange =  event => {
         this.setState({movieId: event.target.value});
     };
+    
 
     handleSubmit = async(event)  => {
       event.preventDefault();
       const {movieId} = this.state;
       if(movieId){
        await this.props.getSingleMovies(movieId)
+       this.setState({isLoading: true})
         }
-        const {movieDetail} = this.props
+
+      const {movieDetail} = this.props
       if(movieDetail){
         this.setMovieCharacter(movieDetail);
+        setTimeout(() =>this.setState({isLoading:false}),2000)
       }
     };
     // filter the current table data and return back to state
     // optionaly called display table 
 
     renderMovieOption = (moviesList) =>{
-      // add loading between each state change
       let movieOption;
       const style ={
         padding: '10px',
-        paddingLeft: '30%',
-        marginBottom:'20px'
+        paddingLeft: '25%',
+        marginBottom:'20px',
+        background:'#ccc'
+      };
+      const selectStyle = {
+        width:'200px'
       }
+    
       if(moviesList){
         movieOption = moviesList.map((movie, index) =>
         <option key={index} value={movie.movieUrl}>{movie.title}</option>
@@ -66,13 +78,14 @@ class Display extends Component {
                   name: 'movieId',
                   id: 'movies',
                  }}
+                 style={selectStyle}
                 >
                 <option value="">Select movie title</option>
                  {movieOption}
                 </Select>
                 </Grid>
                 <Grid item>
-                <Button type="submit" color="primary" variant="contained">View Details</Button>
+                <Button type="submit" color="inherit" variant="outlined"><Icon/>View Movie Details</Button>
                 </Grid>
               </Grid>
           </FormControl>
@@ -90,8 +103,13 @@ class Display extends Component {
     renderOpeningCrawl = data =>{
       const {opening_crawl} = data;
       // add animation
+  
       return(
+        <Fragment>
+          <Animate>
         <Typography>{opening_crawl}</Typography>
+        </Animate>
+         </Fragment> 
       )
     }
 
@@ -105,9 +123,18 @@ class Display extends Component {
     render() {
       const moviesList = this.props.movieList;
       const movieDetail = this.props.movieDetail;
+      const imageStyle = {
+        width: '100%',
+        opacity:'0.7',
+      }
+      const innerLoaderStyle = {
+        width: '70%',
+        opacity:'0.7',
+        paddingLeft: '25%'
+      }
         return (
             <div>
-              {moviesList.length<1? <img src={Loader} width='70%' alt='loading ...'/>:
+              {moviesList.length<1? <img src={StarLoader} style={imageStyle} alt='loading ...'/>:
               <PaperSheet>
               {this.renderMovieOption(moviesList)}
               <Fragment>
@@ -115,7 +142,7 @@ class Display extends Component {
                   <Fragment>
                   {this.renderMovieTitle(movieDetail)}
                   {this.renderOpeningCrawl(movieDetail)}
-                  <DisplayTable tableData={this.state.tableData}/>
+                  {this.state.isLoading?<img src={Loader} style={innerLoaderStyle} alt='loading ...'/> : <DisplayTable tableData={this.state.tableData}/>}
                   </Fragment>
                   )}
               </Fragment>
