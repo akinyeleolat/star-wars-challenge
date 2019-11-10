@@ -30,6 +30,21 @@ const { tableData } = data;
  return rows;
 }
 
+const computeHeight = (data)=>{
+  const {tableData} = data;
+  if(tableData){
+    const totalHeight = tableData
+    .map(height => parseInt(height.height))
+    .filter(x =>!isNaN(x))
+    .reduce((sum,height) => sum + height, 0);
+    const heightInFeet = Number((totalHeight/30.48).toFixed(0));
+    const heightInInches = Number((totalHeight/2.54).toFixed(2));
+    const result = `${totalHeight}cm (${heightInFeet}ft/${heightInInches}in)`
+    return result;
+  }
+  //alert error
+}
+
 
 const desc = (a, b, orderBy) => {
   if (b[orderBy] < a[orderBy]) {
@@ -58,7 +73,7 @@ const getSorting = (order, orderBy) => {
 const headCells = [
   { id: 'name', numeric: false, disablePadding: true, label: 'Character Name' },
   { id: 'gender', numeric: false, disablePadding: false, label: 'Gender' },
-  { id: 'height', numeric: true, disablePadding: false, label: 'Height (g)' },
+  { id: 'height', numeric: true, disablePadding: false, label: 'Height (cm)' },
 ];
 
 const  EnhancedTableHead = (props) => {
@@ -206,14 +221,17 @@ const useStyles = makeStyles(theme => ({
 const EnhancedTable  = (tableData) =>{
   const classes = useStyles();
   const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('calories');
+  const [orderBy, setOrderBy] = React.useState('height');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
+  let totalHeight;
+
   if(tableData){
       getRowData(tableData);
+      totalHeight = computeHeight(tableData);
   }
 
   const handleRequestSort = (event, property) => {
@@ -324,6 +342,21 @@ const EnhancedTable  = (tableData) =>{
                   <TableCell colSpan={6} />
                 </TableRow>
               )}
+              {
+                <TableRow>
+                  <TableCell align='left' colSpan={3}>
+                  <Typography className={classes.title} variant="h6" id="tableTitle">
+                    Total Characters: {rows.length}
+                  </Typography>  
+                  </TableCell>
+
+                  <TableCell align='right' colSpan={3}>
+                  <Typography className={classes.title} variant="h6" id="tableTitle">
+                    Total Height of Characters: {totalHeight}
+                  </Typography>  
+                  </TableCell>
+                </TableRow>
+              }
             </TableBody>
           </Table>
         </div>
