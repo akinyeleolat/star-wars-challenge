@@ -10,7 +10,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 const headCells = [
     { id: 'name', numeric: false, disablePadding: true, label: 'Character Name' },
     { id: 'gender', numeric: false, disablePadding: false, label: 'Gender' },
-    { id: 'height', numeric: true, disablePadding: false, label: 'Height (cm)' },
+    { id: 'height', numeric: false, disablePadding: false, label: 'Height (cm)' },
   ];
   
   const  EnhancedTableHead = (props) => {
