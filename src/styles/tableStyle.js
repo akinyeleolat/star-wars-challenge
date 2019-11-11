@@ -12,7 +12,7 @@ export const useStyles = makeStyles(theme => ({
       opacity: 0.7
     },
     table: {
-      minWidth: 750,
+      minWidth: '80%',
     },
     tableWrapper: {
       overflowX: 'auto',

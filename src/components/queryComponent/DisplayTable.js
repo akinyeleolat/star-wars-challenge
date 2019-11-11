@@ -139,19 +139,19 @@ const EnhancedTable  = (tableData) =>{
                       <TableCell component="th" id={labelId} scope="row" padding="none">
                         {row.name}
                       </TableCell>
-                      <TableCell>{row.gender}</TableCell>
-                      <TableCell align="right">{row.height}</TableCell>
+                      <TableCell align="left">{row.gender}</TableCell>
+                      <TableCell align="left">{row.height}</TableCell>
                     </TableRow>
                   );
                 })}
               {emptyRows > 0 && (
                 <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
-                  <TableCell colSpan={4} />
+                  <TableCell colSpan={3} />
                 </TableRow>
               )}
               {
                 <TableRow>
-                  <TableCell align='left' colSpan={4}>
+                  <TableCell align='left' colSpan={3}>
                   <Typography className={classes.title} variant="h6" id="tableTitle">
                     Total Characters: {rows.length}
                   </Typography>
