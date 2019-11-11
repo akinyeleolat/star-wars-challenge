@@ -23,9 +23,11 @@ class Display extends Component {
             isLoading: false
         }
     }
+    
     componentDidMount(){
       this.props.getAllMovies()
     }
+
     handleChange =  event => {
         this.setState({movieId: event.target.value});
     };
