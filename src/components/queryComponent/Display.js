@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Paper from '@material-ui/core/Paper';
 import Icon from '@material-ui/icons/LocalActivity';
-import { getAllMovies, getSingleMovies } from '../../actions/moviesAction';
+import { getAllMovies, getSingleMovies, filterMovie } from '../../actions/moviesAction';
 import PaperSheet from '../layout/PaperSheet';
 import DisplayTable from '../queryComponent/DisplayTable';
 import DisplayGif from '../../styles/assets/display.gif';
@@ -20,12 +20,19 @@ class Display extends Component {
         this.state = {
             tableData: [],
             movieId: '',
+            filter:'',
             isLoading: false
         }
     }
     
     componentDidMount(){
       this.props.getAllMovies()
+    }
+
+    componentDidUpdate(nextProps) {
+      if (this.props !== nextProps) {
+        this.handleFilter();
+      }
     }
 
     handleChange =  event => {
@@ -44,12 +51,43 @@ class Display extends Component {
       const {movieDetail} = this.props
       if(movieDetail){
         this.setMovieCharacter(movieDetail);
-        setTimeout(() =>this.setState({isLoading:false}),2000)
+        setTimeout(() =>this.setState({isLoading:false}),1000)
+      }
+      else{
+        //alert error
       }
     };
-    // filter the current table data and return back to state
-    // optionaly called display table 
-
+     
+    handleFilter = async (filterKey)=>{
+      const {movieDetail} = this.props;
+      const { characters} = movieDetail;
+      if(filterKey &&(characters.length>0)){
+       await this.props.filterMovie(characters,filterKey);
+       this.setState({
+         isLoading: true,
+         filter: filterKey
+        })
+        
+        const {filteredCharacter} = this.props;
+        if(filteredCharacter && filteredCharacter.length>0){
+        this.setMovieCharacter({characters: filteredCharacter});
+        this.setState({
+          isLoading:false,
+          filter:'',
+        })
+      }
+      else{
+        //alert error
+        this.setMovieCharacter(movieDetail);
+        this.setState({
+          isLoading:false,
+          filter:'',
+        })
+      }
+    } 
+    }
+  
+    
     renderMovieOption = (moviesList) =>{
       let movieOption;
       const style ={
@@ -146,7 +184,10 @@ class Display extends Component {
                   <Fragment>
                   {this.renderMovieTitle(movieInfo)}
                   {this.renderOpeningCrawl(movieInfo)}
-                  {this.state.isLoading?<img src={Loader} style={innerLoaderStyle} alt='loading ...'/> : <DisplayTable tableData={this.state.tableData}/>}
+                  {this.state.isLoading?
+                  <img src={Loader} style={innerLoaderStyle} alt='loading ...'/> :
+                  <DisplayTable tableData={this.state.tableData} getFilter={this.handleFilter}/>
+                  }
                   </Fragment>
                   )}
               </Fragment>
@@ -166,12 +207,14 @@ const mapStateToProps = ({movies}) => (
     {
   movieList: movies.movieList,
   movieInfo: movies.movieInfo,
-  movieDetail: movies.movie
+  movieDetail: movies.movie,
+  filteredCharacter: movies.filteredCharacter
 });
 
 const mapDispatchToProps = {
   getAllMovies,
-  getSingleMovies
+  getSingleMovies,
+  filterMovie
 };
 
 

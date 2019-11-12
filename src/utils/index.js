@@ -13,7 +13,7 @@ export const computeHeight = (data)=>{
   };
 
   export const getRowData = (data) =>{
-  const { tableData } = data;
+  const tableData = data;
       const rows = tableData;
    return rows;
   };
