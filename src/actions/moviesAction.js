@@ -3,7 +3,8 @@ import instance from '../config/axios';
 import {
   FETCH_ALL_MOVIES,
   FETCH_MOVIES_DETAILS,
-  FETCH_MOVIES_INFO
+  FETCH_MOVIES_INFO,
+  FILTER_MOVIE
 } from './types';
 import getMovieCharacterDetails from '../utils/getMovieCharacter';
 
@@ -18,6 +19,13 @@ export const fetchMovies = movie =>{
   return{
     type: FETCH_MOVIES_DETAILS,
     payload: movie
+  };
+};
+
+export const fetchFilteredCharacter = filteredCharacter =>{
+  return{
+    type: FILTER_MOVIE,
+    payload: filteredCharacter
   };
 };
 
@@ -63,3 +71,16 @@ export const getAllMovies = () => {
       dispatch(fetchMovies(movieData));
     }
   }
+
+export const filterMovie = (data, filter)=>{
+  return async dispatch => {
+    let filteredData;
+    if(filter === 'all'){
+     filteredData = data;
+    }
+    else{
+      filteredData = await data.filter((movie)=> movie.gender === filter);
+    }
+    dispatch(fetchFilteredCharacter(filteredData));
+  }
+}

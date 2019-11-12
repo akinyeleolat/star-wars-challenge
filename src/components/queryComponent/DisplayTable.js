@@ -24,7 +24,7 @@ import {
 let rows = [];
 
 
-const EnhancedTable  = (tableData) =>{
+const EnhancedTable  = (props) =>{
   const classes = useStyles();
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('height');
@@ -33,9 +33,11 @@ const EnhancedTable  = (tableData) =>{
   const [dense, setDense] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
+  const{tableData, getFilter} = props;
+
   let totalHeight;
 
-  if(tableData){
+  if(tableData.length > 0){
       rows = getRowData(tableData);
   }
 
@@ -96,7 +98,7 @@ const EnhancedTable  = (tableData) =>{
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar numSelected={selected.length} getFilter={getFilter}/>
         <div className={classes.tableWrapper}>
           <Table
             className={classes.table}
@@ -188,7 +190,8 @@ const EnhancedTable  = (tableData) =>{
   );
 };
 
-EnhancedTableHead.propTypes = {
-  tableData: PropTypes.object.isRequired
+EnhancedTable.propTypes = {
+  tableData: PropTypes.array.isRequired,
+  getFilter: PropTypes.func.isRequired
 }
 export default EnhancedTable;
