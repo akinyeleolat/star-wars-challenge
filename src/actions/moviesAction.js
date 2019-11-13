@@ -5,10 +5,12 @@ import {
   FETCH_ALL_MOVIES,
   FETCH_MOVIES_DETAILS,
   FETCH_MOVIES_INFO,
-  FILTER_MOVIE
+  FILTER_MOVIE,
+  ERROR_LOADING
 } from './types';
 
 import getMovieCharacterDetails from '../utils/getMovieCharacter';
+import {getRequiredData, sortByReleaseDate} from '../utils';
 
 const _fetchMoviesList = moviesList => {
     return {
@@ -45,21 +47,23 @@ const _fetchMovieInfo = movieInfo =>{
 
 export const memoizedFetchMovieInfo = memoize(_fetchMovieInfo, FETCH_MOVIES_INFO)
 
+export const error = ()=>{
+ return{
+   type: ERROR_LOADING,
+   payload: true
+ }
+};
+
 export const getAllMovies = () => {
     return async dispatch => {
       const res = await instance.get('/films');
-      console.log('status',res.status)
+      const {status} = res;
       const movieList = res.data.results;
-      const sortData = movieList.map((movie, index)=>{
-        const newList = {
-         movieId:  (index+1),
-          title: movie.title,
-          releaseDate: movie.release_date,
-          movieUrl: movie.url
-        }
-        return newList
-      })
-      const movieData = sortData.sort((a,b)=> new Date(a.releaseDate) - new Date(b.releaseDate));
+      const sortData = getRequiredData(movieList);
+      const movieData = sortByReleaseDate(sortData);
+      if(status !== 200){
+        dispatch(error());
+      }
       dispatch(memoizedFetchMoviesList(movieData));
     };
   };

@@ -1,1 +1,28 @@
-
+ 
+.App {
+    text-align: center;
+  }
+  
+  .App p {
+    font-size: 30px;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+  }
+  
+  .App .page-title {
+    font-size: 30px;
+  }
+.internet-error {
+    height: 50px;
+    background: #ff9100;
+    padding: 10px;
+    margin-top: 0;
+    font-size: 15px;
+  }
+  
+  .internet-error p {
+    font-size: 20px;
+    text-align: center;
+    line-height: 20px;
+    color: #fff;
+    margin: 0;
+  }

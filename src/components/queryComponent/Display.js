@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { Select, FormControl, Typography} from '@material-ui/core';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 import Paper from '@material-ui/core/Paper';
 import { getAllMovies, getSingleMovies, filterMovie } from '../../actions/moviesAction';
 import PaperSheet from '../layout/PaperSheet';
@@ -10,6 +11,7 @@ import DisplayGif from '../../styles/assets/display.gif';
 import Loader from '../../styles/assets/giphy.gif';
 import Animate from '../layout/Animate';
 import AnimateTitle from '../layout/AnimateTitle';
+import ErrorBadge from '../../styles/assets/error.gif';
 
 
 class Display extends Component {
@@ -51,7 +53,7 @@ class Display extends Component {
           this.handleAnimation(movieDetail)
          }
          else{
-           //alert error
+           toast.warn('No valid character');
          }
     };
     
@@ -74,7 +76,7 @@ class Display extends Component {
         })
       }
       else{
-        //alert error
+        toast.warn('Nothing filtered nor invalid parameters');
         this.setMovieCharacter(movieDetail);
         this.setState({
           isLoading:false,
@@ -177,6 +179,7 @@ class Display extends Component {
       const moviesList = this.props.movieList;
       const movieDetail = this.props.movieDetail;
       const movieInfo = this.props.movieInfo;
+      const {error} = this.props;
       const imageStyle = {
         width: '100%',
         opacity:'0.7',
@@ -187,6 +190,9 @@ class Display extends Component {
         paddingLeft: '25%'
       }
         return (
+          <div>
+          {error?
+            <div><img src={ErrorBadge} style={imageStyle} alt='error loading ...'/></div>:
             <div>
               {moviesList.length<1? <img src={Loader} style={imageStyle} alt='loading ...'/>:
               <PaperSheet>
@@ -204,7 +210,8 @@ class Display extends Component {
                   )}
               </Fragment>
               </PaperSheet> }
-            </div>
+            </div>}
+          </div>
         )
     }
 }
@@ -220,7 +227,8 @@ const mapStateToProps = ({movies}) => (
   movieList: movies.movieList,
   movieInfo: movies.movieInfo,
   movieDetail: movies.movie,
-  filteredCharacter: movies.filteredCharacter
+  filteredCharacter: movies.filteredCharacter,
+  errorLoadingMovie: movies.error
 });
 
 const mapDispatchToProps = {
