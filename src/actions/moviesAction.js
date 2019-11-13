@@ -39,6 +39,7 @@ export const fetchMovieInfo = movieInfo =>{
 export const getAllMovies = () => {
     return async dispatch => {
       const res = await instance.get('/films');
+      console.log('status',res.status)
       const movieList = res.data.results;
       const sortData = movieList.map((movie, index)=>{
         const newList = {

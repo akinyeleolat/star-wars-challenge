@@ -14,7 +14,16 @@ import {useToolbarStyles} from '../../styles/tableStyle';
 
 const FilterDropDown = (props) =>{
   const [filterKey,setFilterKey] = useState('');
-  const{filterHandler} = props; 
+  const{filterHandler, rows} = props; 
+  const {characters}= rows;
+  let genderFilter;
+
+  if(characters){
+    const gender = [...new Set(characters.map((character) =>character.gender))]
+    genderFilter = gender.map((item,index)=><option key={index} value={item}>{item}</option>)
+   }
+  
+
   const handleChange = (event)=>{
     setFilterKey(event.target.value);
     filterHandler(event.target.value);
@@ -39,11 +48,7 @@ const FilterDropDown = (props) =>{
             >
             <option value=''>Filter by Gender</option>  
             <option value="all">All</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="hermaphrodite">Hermaphrodite</option>
-            <option value="n/a">N/A</option>
-            <option value="none">None</option>
+            {genderFilter}
             </Select>
             </Grid>
             <Grid item>
@@ -56,8 +61,7 @@ const FilterDropDown = (props) =>{
 
 const EnhancedTableToolbar = props => {
     const classes = useToolbarStyles();
-    const { numSelected} = props;
-    const {getFilter} = props;
+    const { numSelected, rows, getFilter} = props;
   
     return (
       <Toolbar
@@ -82,7 +86,7 @@ const EnhancedTableToolbar = props => {
             </IconButton>
           </Tooltip>
         ) : (
-          <FilterDropDown filterHandler={getFilter}/>
+          <FilterDropDown filterHandler={getFilter} rows={rows}/>
         )}
       </Toolbar>
     );

@@ -31,9 +31,9 @@ const EnhancedTable  = (props) =>{
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(false);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(20);
 
-  const{tableData, getFilter} = props;
+  const{tableData,movieDetail, getFilter} = props;
 
   let totalHeight;
 
@@ -98,7 +98,7 @@ const EnhancedTable  = (props) =>{
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <EnhancedTableToolbar numSelected={selected.length} getFilter={getFilter}/>
+        <EnhancedTableToolbar numSelected={selected.length} getFilter={getFilter} rows={movieDetail}/>
         <div className={classes.tableWrapper}>
           <Table
             className={classes.table}
@@ -167,7 +167,7 @@ const EnhancedTable  = (props) =>{
           </Table>
         </div>
         <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[20,30,40]}
           component="div"
           count={rows.length}
           rowsPerPage={rowsPerPage}

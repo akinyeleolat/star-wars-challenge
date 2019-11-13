@@ -4,11 +4,12 @@ import { toast, ToastContainer } from 'react-toastify';
 import { Route, BrowserRouter, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import Home from './components/Home';
+import {getAllMovies} from './actions/moviesAction';
 import store from './store';
 import './index.css';
 
 
-
+store.dispatch(getAllMovies);
 toast.configure({
   autoClose: 2000,
   draggable: false,

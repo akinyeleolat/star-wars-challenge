@@ -7,6 +7,7 @@ const useStyles = makeStyles(theme => ({
   header:{
     backgroundColor: '#000',
     color: '#F0E68C',
+    borderBottom: '1px solid yellow'
    },
    logo:{
      width: '100px'
