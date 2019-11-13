@@ -1,4 +1,5 @@
 import axios from 'axios'; 
+import { memoize } from 'redux-promise-memo';
 import instance from '../config/axios';
 import {
   FETCH_ALL_MOVIES,
@@ -6,35 +7,43 @@ import {
   FETCH_MOVIES_INFO,
   FILTER_MOVIE
 } from './types';
+
 import getMovieCharacterDetails from '../utils/getMovieCharacter';
 
-export const fetchMoviesList = moviesList => {
+const _fetchMoviesList = moviesList => {
     return {
       type: FETCH_ALL_MOVIES,
       payload: moviesList
     };
   };
 
-export const fetchMovies = movie =>{
+export const memoizedFetchMoviesList = memoize(_fetchMoviesList, FETCH_ALL_MOVIES);
+
+const _fetchMovies = movie =>{
   return{
     type: FETCH_MOVIES_DETAILS,
     payload: movie
   };
 };
 
-export const fetchFilteredCharacter = filteredCharacter =>{
+export const memoizedFetchMovies = memoize(_fetchMovies,FETCH_MOVIES_DETAILS)
+
+const _fetchFilteredCharacter = filteredCharacter =>{
   return{
     type: FILTER_MOVIE,
     payload: filteredCharacter
   };
 };
+export const memoizedFilteredCharacter = memoize(_fetchFilteredCharacter,FILTER_MOVIE)
 
-export const fetchMovieInfo = movieInfo =>{
+const _fetchMovieInfo = movieInfo =>{
   return{
     type: FETCH_MOVIES_INFO,
     payload: movieInfo
   }
 }
+
+export const memoizedFetchMovieInfo = memoize(_fetchMovieInfo, FETCH_MOVIES_INFO)
 
 export const getAllMovies = () => {
     return async dispatch => {
@@ -51,7 +60,7 @@ export const getAllMovies = () => {
         return newList
       })
       const movieData = sortData.sort((a,b)=> new Date(a.releaseDate) - new Date(b.releaseDate));
-      dispatch(fetchMoviesList(movieData));
+      dispatch(memoizedFetchMoviesList(movieData));
     };
   };
 
@@ -64,12 +73,12 @@ export const getAllMovies = () => {
         title,
         opening_crawl
       }
-      dispatch(fetchMovieInfo(movieInfo))
+      dispatch(memoizedFetchMovieInfo(movieInfo))
       const characters = await getMovieCharacterDetails(movies);
       const movieData = {
         characters
       }
-      dispatch(fetchMovies(movieData));
+      dispatch(memoizedFetchMovies(movieData));
     }
   }
 
@@ -82,6 +91,6 @@ export const filterMovie = (data, filter)=>{
     else{
       filteredData = await data.filter((movie)=> movie.gender === filter);
     }
-    dispatch(fetchFilteredCharacter(filteredData));
+    dispatch(memoizedFilteredCharacter(filteredData));
   }
 }
