@@ -2,14 +2,16 @@ import {
     FETCH_ALL_MOVIES,
     FETCH_MOVIES_DETAILS,
     FETCH_MOVIES_INFO,
-    FILTER_MOVIE
+    FILTER_MOVIE,
+    ERROR_LOADING
   } from '../actions/types';
   
   const initialState = {
     movieList: [],
     movie:'',
     movieInfo:'',
-    filteredCharacter:''
+    filteredCharacter:'',
+    error:''
   };
 
   const MoviesReducers = (state = initialState, action) => {
@@ -34,6 +36,11 @@ import {
           ...state,
           filteredCharacter: action.payload
         }
+        case ERROR_LOADING:
+          return{
+            ...state,
+            error: action.payload
+          }
       default:
         return state;
     }

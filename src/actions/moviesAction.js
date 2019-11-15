@@ -1,56 +1,70 @@
 import axios from 'axios'; 
+import { memoize } from 'redux-promise-memo';
 import instance from '../config/axios';
 import {
   FETCH_ALL_MOVIES,
   FETCH_MOVIES_DETAILS,
   FETCH_MOVIES_INFO,
-  FILTER_MOVIE
+  FILTER_MOVIE,
+  ERROR_LOADING
 } from './types';
-import getMovieCharacterDetails from '../utils/getMovieCharacter';
 
-export const fetchMoviesList = moviesList => {
+import getMovieCharacterDetails from '../utils/getMovieCharacter';
+import {getRequiredData, sortByReleaseDate} from '../utils';
+
+const _fetchMoviesList = moviesList => {
     return {
       type: FETCH_ALL_MOVIES,
       payload: moviesList
     };
   };
 
-export const fetchMovies = movie =>{
+export const memoizedFetchMoviesList = memoize(_fetchMoviesList, FETCH_ALL_MOVIES);
+
+const _fetchMovies = movie =>{
   return{
     type: FETCH_MOVIES_DETAILS,
     payload: movie
   };
 };
 
-export const fetchFilteredCharacter = filteredCharacter =>{
+export const memoizedFetchMovies = memoize(_fetchMovies,FETCH_MOVIES_DETAILS)
+
+const _fetchFilteredCharacter = filteredCharacter =>{
   return{
     type: FILTER_MOVIE,
     payload: filteredCharacter
   };
 };
+export const memoizedFilteredCharacter = memoize(_fetchFilteredCharacter,FILTER_MOVIE)
 
-export const fetchMovieInfo = movieInfo =>{
+const _fetchMovieInfo = movieInfo =>{
   return{
     type: FETCH_MOVIES_INFO,
     payload: movieInfo
   }
 }
 
+export const memoizedFetchMovieInfo = memoize(_fetchMovieInfo, FETCH_MOVIES_INFO)
+
+export const error = ()=>{
+ return{
+   type: ERROR_LOADING,
+   payload: true
+ }
+};
+
 export const getAllMovies = () => {
     return async dispatch => {
       const res = await instance.get('/films');
+      const {status} = res;
       const movieList = res.data.results;
-      const sortData = movieList.map((movie, index)=>{
-        const newList = {
-         movieId:  (index+1),
-          title: movie.title,
-          releaseDate: movie.release_date,
-          movieUrl: movie.url
-        }
-        return newList
-      })
-      const movieData = sortData.sort((a,b)=> new Date(a.releaseDate) - new Date(b.releaseDate));
-      dispatch(fetchMoviesList(movieData));
+      const sortData = getRequiredData(movieList);
+      const movieData = sortByReleaseDate(sortData);
+      if(status !== 200){
+        dispatch(error());
+      }
+      dispatch(memoizedFetchMoviesList(movieData));
     };
   };
 
@@ -63,12 +77,12 @@ export const getAllMovies = () => {
         title,
         opening_crawl
       }
-      dispatch(fetchMovieInfo(movieInfo))
+      dispatch(memoizedFetchMovieInfo(movieInfo))
       const characters = await getMovieCharacterDetails(movies);
       const movieData = {
         characters
       }
-      dispatch(fetchMovies(movieData));
+      dispatch(memoizedFetchMovies(movieData));
     }
   }
 
@@ -81,6 +95,6 @@ export const filterMovie = (data, filter)=>{
     else{
       filteredData = await data.filter((movie)=> movie.gender === filter);
     }
-    dispatch(fetchFilteredCharacter(filteredData));
+    dispatch(memoizedFilteredCharacter(filteredData));
   }
 }

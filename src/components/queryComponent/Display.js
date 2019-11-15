@@ -1,17 +1,17 @@
 import React, { Component, Fragment } from 'react';
-import { Select, FormControl, Typography, Grid, Button} from '@material-ui/core';
+import { Select, FormControl, Typography} from '@material-ui/core';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 import Paper from '@material-ui/core/Paper';
-import Icon from '@material-ui/icons/LocalActivity';
 import { getAllMovies, getSingleMovies, filterMovie } from '../../actions/moviesAction';
 import PaperSheet from '../layout/PaperSheet';
 import DisplayTable from '../queryComponent/DisplayTable';
 import DisplayGif from '../../styles/assets/display.gif';
 import Loader from '../../styles/assets/giphy.gif';
-import StarLoader from '../../styles/assets/star-wars.gif';
 import Animate from '../layout/Animate';
 import AnimateTitle from '../layout/AnimateTitle';
+import ErrorBadge from '../../styles/assets/error.gif';
 
 
 class Display extends Component {
@@ -21,7 +21,8 @@ class Display extends Component {
             tableData: [],
             movieId: '',
             filter:'',
-            isLoading: false
+            isLoading: false,
+            animate:true,
         }
     }
     
@@ -35,29 +36,27 @@ class Display extends Component {
       }
     }
 
-    handleChange =  event => {
-        this.setState({movieId: event.target.value});
+    handleChange = async(event)  => {
+      const {value} = event.target;
+        this.setState({movieId: value});
+        if(value){
+          await this.props.getSingleMovies(value)
+          this.setState({
+            isLoading: true,
+            animate: true
+          })
+           }
+         const {movieDetail} = this.props
+         if(movieDetail){
+          this.setState({isLoading:false})
+          this.setMovieCharacter(movieDetail);
+          this.handleAnimation(movieDetail)
+         }
+         else{
+           toast.warn('No valid character');
+         }
     };
     
-
-    handleSubmit = async(event)  => {
-      event.preventDefault();
-      const {movieId} = this.state;
-      if(movieId){
-       await this.props.getSingleMovies(movieId)
-       this.setState({isLoading: true})
-        }
-
-      const {movieDetail} = this.props
-      if(movieDetail){
-        this.setMovieCharacter(movieDetail);
-        setTimeout(() =>this.setState({isLoading:false}),1000)
-      }
-      else{
-        //alert error
-      }
-    };
-     
     handleFilter = async (filterKey)=>{
       const {movieDetail} = this.props;
       const { characters} = movieDetail;
@@ -77,7 +76,7 @@ class Display extends Component {
         })
       }
       else{
-        //alert error
+        toast.warn('Nothing filtered nor invalid parameters');
         this.setMovieCharacter(movieDetail);
         this.setState({
           isLoading:false,
@@ -86,18 +85,26 @@ class Display extends Component {
       }
     } 
     }
+
+    handleAnimation = data =>{
+      const {opening_crawl}= data;
+      if(opening_crawl){
+        this.setState({animate: true}) 
+      }
+      setTimeout(() =>this.setState({animate:false}),5000)
+    }
   
     
     renderMovieOption = (moviesList) =>{
       let movieOption;
       const style ={
         padding: '10px',
-        paddingLeft: '25%',
+        paddingLeft: '10%',
         marginBottom:'20px',
         background:'#ccc'
       };
       const selectStyle = {
-        width:'200px'
+        width:'200px',
       }
     
       if(moviesList){
@@ -107,10 +114,8 @@ class Display extends Component {
     }
       return(
         <Paper style={style}>
-          <form  onSubmit={this.handleSubmit}>
+          <form>
           <FormControl>
-              <Grid container spacing={2} justify="center">
-                <Grid item>
                 <Select
                   native
                   value={this.state.movieId}
@@ -124,11 +129,6 @@ class Display extends Component {
                 <option value="">Select movie title</option>
                  {movieOption}
                 </Select>
-                </Grid>
-                <Grid item>
-                <Button type="submit" color="inherit" variant="outlined"><Icon/>View Movie Details</Button>
-                </Grid>
-              </Grid>
           </FormControl>
           </form>
         </Paper>
@@ -136,20 +136,34 @@ class Display extends Component {
     }
     renderMovieTitle = (data) =>{
       const {title} = data;
+      const {animate} = this.state; 
       return(
+        <Fragment>
+
+        {animate? (
         <AnimateTitle>
         <h1>{title}</h1>
-        </AnimateTitle>
+       </AnimateTitle>
+       ):
+       (
+        <h1>{title}</h1>
+       )
+       }
+       </Fragment>
       )
     }
 
     renderOpeningCrawl = data =>{
-      const {opening_crawl} = data;  
+      const {opening_crawl} = data;
+      const {animate} = this.state; 
       return(
         <Fragment>
-        <Animate>
-        <Typography>{opening_crawl}</Typography>
-        </Animate>
+       { animate?
+         (<Animate>
+         <Typography>{opening_crawl}</Typography>
+         </Animate>):
+         (<Typography>{opening_crawl}</Typography>)
+       } 
          </Fragment> 
       )
     }
@@ -165,6 +179,7 @@ class Display extends Component {
       const moviesList = this.props.movieList;
       const movieDetail = this.props.movieDetail;
       const movieInfo = this.props.movieInfo;
+      const {error} = this.props;
       const imageStyle = {
         width: '100%',
         opacity:'0.7',
@@ -175,8 +190,11 @@ class Display extends Component {
         paddingLeft: '25%'
       }
         return (
+          <div>
+          {error?
+            <div><img src={ErrorBadge} style={imageStyle} alt='error loading ...'/></div>:
             <div>
-              {moviesList.length<1? <img src={StarLoader} style={imageStyle} alt='loading ...'/>:
+              {moviesList.length<1? <img src={Loader} style={imageStyle} alt='loading ...'/>:
               <PaperSheet>
               {this.renderMovieOption(moviesList)}
               <Fragment>
@@ -186,13 +204,14 @@ class Display extends Component {
                   {this.renderOpeningCrawl(movieInfo)}
                   {this.state.isLoading?
                   <img src={Loader} style={innerLoaderStyle} alt='loading ...'/> :
-                  <DisplayTable tableData={this.state.tableData} getFilter={this.handleFilter}/>
+                  <DisplayTable tableData={this.state.tableData} getFilter={this.handleFilter} movieDetail={movieDetail}/>
                   }
                   </Fragment>
                   )}
               </Fragment>
               </PaperSheet> }
-            </div>
+            </div>}
+          </div>
         )
     }
 }
@@ -208,7 +227,8 @@ const mapStateToProps = ({movies}) => (
   movieList: movies.movieList,
   movieInfo: movies.movieInfo,
   movieDetail: movies.movie,
-  filteredCharacter: movies.filteredCharacter
+  filteredCharacter: movies.filteredCharacter,
+  errorLoadingMovie: movies.error
 });
 
 const mapDispatchToProps = {

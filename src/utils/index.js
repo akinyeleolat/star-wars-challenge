@@ -1,3 +1,18 @@
+
+import { toast } from 'react-toastify';
+
+export const getRequiredData = (movieList) => movieList.map((movie, index)=>{
+  const newList = {
+   movieId:  (index+1),
+    title: movie.title,
+    releaseDate: movie.release_date,
+    movieUrl: movie.url
+  }
+  return newList
+});
+
+export const sortByReleaseDate =(sortData)=>sortData.sort((a,b)=> new Date(a.releaseDate) - new Date(b.releaseDate));
+
 export const computeHeight = (data)=>{
     if(data){
       const totalHeight = data
@@ -9,7 +24,7 @@ export const computeHeight = (data)=>{
       const result = `${totalHeight}cm (${heightInFeet}ft/${heightInInches}in)`
       return result;
     }
-    //alert error
+    toast.warn('invalid parameters');
   };
 
   export const getRowData = (data) =>{

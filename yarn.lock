@@ -8646,6 +8646,11 @@ redux-logger@^3.0.6:
   dependencies:
     deep-diff "^0.3.5"
 
+redux-promise-memo@^0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/redux-promise-memo/-/redux-promise-memo-0.2.3.tgz#a840280baef3efbd7b36e8639e2afed072bd76a5"
+  integrity sha512-0bw00MCzvIsSxVxRJRbdznBKxY7uavgnsJ/LTYIs40C3tElFMuJOLQOoUfi4xYXuZ/jMY+J68xWnI1bv7Jj2OQ==
+
 redux-promise-middleware@^6.1.0:
   version "6.1.2"
   resolved "https://registry.yarnpkg.com/redux-promise-middleware/-/redux-promise-middleware-6.1.2.tgz#1c14222686934be243cbb292e348ef7d5b20d6d2"
